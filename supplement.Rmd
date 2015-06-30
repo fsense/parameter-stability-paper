@@ -334,7 +334,7 @@ One possibility is to log-transform the data:
 
 ```{r log transform}
 alphalog <- log(alpha)
-firstlog <- lmer(alphalog ~ type*session + (1|subj) + (1|item))
+firstlog <- lmer(alphalog ~ sessioncen*swyn + flci + (1|subj) + (1|item), data=alphadata)
 par(mfrow=c(1, 2))
 plot(fitted(firstlog),residuals(firstlog))
 abline(a=0, b=0)
