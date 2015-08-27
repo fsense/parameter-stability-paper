@@ -1,9 +1,9 @@
 ---
 title: "Supplement for Sense, Behrens, Meijer & Van Rijn (2015)"
 author: 'compiled by: [Florian Sense](f.sense@rug.nl)'
-date: "Published: June 30, 2015 --- Last update: June 30, 2015"
+date: "Published: June 30, 2015 --- Last update: August 27, 2015"
 output: 
-  html_document:
+  pdf_document:
     toc: true
 ---
 
@@ -156,7 +156,7 @@ The proportion correct for each block is computed and the corresponding "violin"
 
 ```{r violin plot of test performance}
 par(las=1, bty='n')
-plot(NA, xlim=c(.5, 6.5), ylim=c(.2, 1), axes=F, xlab='', ylab='proportion correct')
+plot(NA, xlim=c(.5, 6.5), ylim=c(.2, 1), axes=F, xlab='', ylab='Proportion Correct')
 axis(1, 1:6, blocks)
 axis(2, seq(.2, 1, .1))
 title('Percentage Correct on Final Test')
@@ -186,7 +186,7 @@ plot.alpha.test <- function(test, A, use.bins=TRUE, n.bin=5) {
   line.col <- rgb(0, 0, 0, .3)
   
   par(las=1)
-  plot(NA, xlim=range(A), ylim=c(.2, 1.05), axes=F, xlab='mean(alpha || rate of forgetting)', ylab='% correct on test', main=paste('Alpha-Test Relationship (N = ', nrow(A), ')', sep=''))
+  plot(NA, xlim=range(A), ylim=c(.2, 1.05), axes=F, xlab='Mean Rate of Forgetting', ylab='% Correct on Test', main=paste('Alpha-Test Relationship (N = ', nrow(A), ')', sep=''))
   axis(1, round(seq(min(A), max(A), .05), 2))
   axis(2, seq(.2, 1, .1))
   abline(v=.3, lty=2, col=line.col) # the default alpha
@@ -257,7 +257,7 @@ d <- aggregate(alpha ~ block + subj, data.fr, mean)
 
 par(las=1, bty='n')
 ylim <- c(.1, .5)
-plot(NA, xlim=c(.5, 6.5), ylim=ylim, axes=FALSE, xlab='', ylab='estimated rate of forgetting')
+plot(NA, xlim=c(.5, 6.5), ylim=ylim, axes=FALSE, xlab='', ylab='Estimated Rate of Forgetting')
 
 for(i in 1:length(blocks)) {
   vioplot(d$alpha[d$block == blocks[i]], at=i, col=paste(block.col[i], 'CC', sep=''), add=TRUE, border=NA)
