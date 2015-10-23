@@ -1,7 +1,7 @@
 ---
 title: "Supplement for Sense, Behrens, Meijer & Van Rijn (2015)"
 author: 'compiled by: [Florian Sense](f.sense@rug.nl)'
-date: "Published: June 30, 2015 --- Last update: August 27, 2015"
+date: "Created: June 30, 2015 --- Last update: October 23, 2015"
 output: 
   pdf_document:
     toc: true
