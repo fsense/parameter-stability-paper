@@ -1,7 +1,7 @@
 ---
 title: "Supplement for Sense, Behrens, Meijer & Van Rijn (2015)"
 author: 'compiled by: [Florian Sense](f.sense@rug.nl)'
-date: "Created: June 30, 2015 --- Last update: October 23, 2015"
+date: "Created: June 30, 2015 --- Last update: November 28, 2015"
 output: 
   pdf_document:
     toc: true
@@ -50,13 +50,14 @@ Additionally, the `misc/` folder contains:
 
 * A two-line script that determines the labels used for the blocks and their corresponding colors: `block_colors.R`.
 
-* The files OmniGraffle files to create Figures 1 and 2 as well as the exported .png files that are in the paper.
+* The OmniGraffle files to create Figures 1 and 2 as well as the exported .pdf files that are in the paper.
 
 ## Reading in the data
 
 The data is distributed across multiple files and this is a bit messy.
 
 ```{r reading in the data}
+# List of subject numbers that should be included:
 whitelist <- read.table('data/whitelist.txt')[, 1]
 
 # Read in the demographic information:
@@ -142,24 +143,20 @@ pie(table(demo$america), main='Have you ever been to the USA?')
 
 This figure was created in `OmniGraffle Professional` and the file `study_design.graffle` is located in the `/misc` folder.
 
-![alt text](misc/study_design.png)
-
 ## Figure 2: A graphical representation of the algorithm
 
 This figure was created in `OmniGraffle Professional` and the file `flowchart_algorithm_v2.graffle` is located in the `/misc` folder.
-
-![alt text](misc/flowchart_algorithm_v2.png)
 
 ## Figure 3: Violin plot of test performance
 
 The proportion correct for each block is computed and the corresponding "violin" is added to the plot:
 
-```{r violin plot of test performance}
+```{r}
 par(las=1, bty='n')
 plot(NA, xlim=c(.5, 6.5), ylim=c(.2, 1), axes=F, xlab='', ylab='Proportion Correct')
 axis(1, 1:6, blocks)
 axis(2, seq(.2, 1, .1))
-title('Percentage Correct on Final Test')
+# title('Percentage Correct on Final Test')
 
 tmp <- apply(vocab1[, 3:27], 1, function(X) mean(tolower(X) == correct[, 1]))
 vioplot(tmp, at=1, col=paste(block.col[1], '88', sep=''), add=TRUE, border=NA)
@@ -238,9 +235,9 @@ plot.alpha.test <- function(test, A, use.bins=TRUE, n.bin=5) {
 }
 ```
 
-This function can be used to create plots with varying numbers of bin sizes (or no bins). In the paper, a bin size of 5 was used because it is a good trade-off between preserving the information in the data and providing good readability.
+This function can be used to create plots with varying numbers of bin sizes (or no bins). In the paper, a bin size of 5 was used because it is a good trade-off between preserving the information in the data and providing good readability. Here we are showing the plot with all the raw data along with varying bin sizes:
 
-```{r multiple bin sizes, fig.width=10, fig.height=10}
+```{r, fig.width=10, fig.height=10}
 A <- read.table("data/mean_alphas.txt")
 
 par(mfrow=c(2,2))
@@ -252,7 +249,7 @@ for(i in c(3, 5, 7)) plot.alpha.test(test, A, n.bin=i)
 
 Another violin plot, showing estimated rate of forgetting per participant for each of the six conditions.
 
-```{r mean ROF per pp per block}
+```{r}
 d <- aggregate(alpha ~ block + subj, data.fr, mean)
 
 par(las=1, bty='n')
@@ -277,7 +274,7 @@ The correlations were computed for all combinations of blocks:
 for(i in 2:6) {
   print('-----')
   for(j in 1:6) {
-    if(i <= j) next #iteration
+    if(i <= j) next # skip this iteration
     tmp <- cor.test(A[, i], A[, j])
     print(paste('r = ', round(tmp$estimate, 3), ' with p >= ', round(tmp$p.value, 4), ' for cor(', blocks[i], ', ', blocks[j], ')', sep=''))
   }
@@ -293,7 +290,7 @@ The *p*-values are all tiny and all correlations differ significantly from 0.
 
 This analysis was conducted by **Friederike Behrens**.
 
-```{r lmer}
+```{r}
 alphadata <- read.table("data/data_for_Friederike.csv", sep=",", header=TRUE)
 attach(alphadata)
 boxplot(alpha ~ subj) 
@@ -318,7 +315,7 @@ flci[which(block == 'maps')] <- .5    # replace at index of "maps"/city
 
 Fit the first model:
 
-```{r first model}
+```{r}
 first <- lmer(alpha ~ session*swyn + session*flci + (1|subj) + (1|item))
 
 # checking assumtpions:
@@ -332,7 +329,7 @@ The assumption of linearity is met, because no pattern or shape of a specific no
 
 One possibility is to log-transform the data:
 
-```{r log transform}
+```{r}
 alphalog <- log(alpha)
 firstlog <- lmer(alphalog ~ sessioncen*swyn + flci + (1|subj) + (1|item), data=alphadata)
 par(mfrow=c(1, 2))
@@ -415,3 +412,12 @@ The residuals nicely follow the reference line in the Q-Q plot suggesting a norm
 Taken all together, the stepwise hierarchical regression suggest that the third session of the swahili task can best be predicted by the two preceding sessions of the same task, but not based on tasks from other domains. The total proportion of the variance of the third session of the swahili explained by this model is 77.68% (76.99% adjusted R^2). The final model is as follows:
 
 > alpha(sw3)= 0.026 + 0.636 * alpha(sw2) + 0.244 * alpha(sw1)
+
+
+## Session information
+
+In case there are problems reproducing any of the results/analyses, here's a complete overview of the environment in which this script was run.
+
+```{r}
+print(sessionInfo(), locale = FALSE)
+```
